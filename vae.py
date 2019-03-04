@@ -7,7 +7,10 @@ import torch
 # from torchvision import datasets, transforms 
 # from torchvision.utils import save_image 
 import torchvision 
-
+import os, sys 
+if not os.path.isdir("./results"):
+    os.system("mkdir results")
+    
 parser = argparse.ArgumentParser(description='VAE MNIST') 
 parser.add_argument('--batch-size', type=int, default=128, metavar='N', \
     help='input batch size for training (default=128)')
