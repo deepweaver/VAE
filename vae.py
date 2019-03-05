@@ -104,10 +104,25 @@ def loss_function(recon_x, x, mu, logvar):
     KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
 
     return BCE + KLD 
+# batch size = 11, here's what I found:
+# In [89]: len(train_loader.dataset)                                              
+# Out[89]: 60000
+
+# In [90]: len(test_loader.dataset)                                               
+# Out[90]: 10000
+
+# In [91]: len(train_loader)                                                      
+# Out[91]: 5455
+
+# In [92]: len(test_loader)                                                       
+# Out[92]: 910
 
 def train(epoch):
     model.train() 
     train_loss = 0 
+# In [60]: train_loader.dataset[0][0].shape                                       
+# Out[60]: torch.Size([1, 28, 28])
+
     for batch_idx, (data, _) in enumerate(train_loader):
         data = data.to(cuda0) 
         optimizer.zero_grad() 
@@ -121,7 +136,16 @@ def train(epoch):
                 epoch, batch_idx * len(data), len(train_loader.dataset),
                 100.0 * batch_idx / len(train_loader),
                 loss.item() / len(data)))
-        
+                # data is a batch of data, len(data) = batch_size
+                # batch_idx is the index of batches not samples
+                # e.g. you have 600 samples, 
+                # batch size = 10 = len(data) 
+                # total batch index from 0 to 60
+                # len(train_loader.dataset) == number of total samples
+                # len(train_loader) returns the number of batches = len(train_loader.dataset) / train_loader.batch_size 
+# In [50]: a = torch.Tensor([12])                                                 
+# In [51]: a.item()                                                               
+# Out[51]: 12.0
     print('====> Epoch: {} Average loss: {:.4}'.format(epoch, train_loss / len(train_loader.dataset)))
 
 def test(epoch):
